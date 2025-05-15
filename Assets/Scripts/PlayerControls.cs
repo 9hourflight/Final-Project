@@ -7,10 +7,15 @@ private CharacterController controller;
     [SerializeField] Transform cameraArm;
     [SerializeField] GameObject loogeyPrefab;
     [SerializeField] Transform loogeySpawn;
+    [SerializeField] private Animator characterAnimator;
     private Rigidbody loogeyRb;
-    private float speed;
+    [SerializeField] private float speed;
     [SerializeField]
-    float spitForce;
+    private float spitForce;
+    [SerializeField]
+    private float yaw;
+    [SerializeField]
+    private float pitch;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,20 +23,27 @@ private CharacterController controller;
         playerCamera = GetComponentInChildren<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
         loogeyRb = loogeyPrefab.GetComponent<Rigidbody>();
-        loogeyRb.AddForce(transform.forward, ForceMode.Impulse);
+        characterAnimator = GetComponent<Animator>();
+        
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         float verticalInput = Input.GetAxis("Vertical");
         float horizontalInput = Input.GetAxis("Horizontal");
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
+        yaw += mouseX;
+        pitch -= mouseY;
+        pitch = Mathf.Clamp(pitch, -90f, 60f); //magic numbers
+
+        cameraArm.localRotation = Quaternion.Euler(pitch, 0, 0);
+        transform.localRotation = Quaternion.Euler(0, yaw, 0);
 
         Vector3 inputDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
-        cameraArm.Rotate( -mouseY, 0,  0);
-        transform.Rotate(0, mouseX, 0);
+        //cameraArm.Rotate( -mouseY, 0,  0);
+        //transform.Rotate(0, mouseX, 0);
         if(inputDirection.magnitude >= 0.1f)
         {
             Vector3 moveDirection = transform.right * inputDirection.x + transform.forward * inputDirection.z;
@@ -40,8 +52,12 @@ private CharacterController controller;
 
         if (Input.GetMouseButtonDown(0))
         {
+            loogeyRb.AddForce(transform.forward, ForceMode.Impulse);
             Instantiate(loogeyPrefab, loogeySpawn.transform.position, loogeyPrefab.transform.rotation);
             
         }
+
+        characterAnimator.SetFloat("MoveX", inputDirection.x);
+        characterAnimator.SetFloat("MoveY", inputDirection.z);
     }
 }
