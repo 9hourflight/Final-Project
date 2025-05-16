@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
 {
-private CharacterController controller;
+    private CharacterController controller;
     private Camera playerCamera;
     [SerializeField] Transform cameraArm;
     [SerializeField] GameObject loogeyPrefab;
