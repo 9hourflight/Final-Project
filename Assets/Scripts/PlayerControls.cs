@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerControls : MonoBehaviour
@@ -8,11 +9,9 @@ private CharacterController controller;
     [SerializeField] GameObject loogeyPrefab;
     [SerializeField] Transform loogeySpawn;
     [SerializeField] private Animator characterAnimator;
-    [SerializeField]
-    private Rigidbody loogeyRb;
     [SerializeField] private float speed;
     [SerializeField]
-    private float spitForce;
+    private float spitForce = 1400;
     [SerializeField]
     private float yaw;
     [SerializeField]
@@ -23,7 +22,6 @@ private CharacterController controller;
         controller = GetComponent<CharacterController>();
         playerCamera = GetComponentInChildren<Camera>();
         Cursor.lockState = CursorLockMode.Locked;
-        loogeyRb = loogeyPrefab.GetComponent<Rigidbody>();
         characterAnimator = GetComponent<Animator>();
 
     }
@@ -41,6 +39,7 @@ private CharacterController controller;
 
         cameraArm.localRotation = Quaternion.Euler(pitch, 0, 0);
         transform.localRotation = Quaternion.Euler(0, yaw, 0);
+        loogeySpawn.localRotation = Quaternion.Euler(pitch, 0, 0);
 
         Vector3 inputDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
         //cameraArm.Rotate( -mouseY, 0,  0);
@@ -53,11 +52,9 @@ private CharacterController controller;
 
         if (Input.GetButtonDown("Fire1"))
         {
-            
-            Instantiate(loogeyPrefab, loogeySpawn.transform.position, loogeyPrefab.transform.rotation);
-            loogeyRb.AddForce(0, 0, 10, ForceMode.Impulse);
-            //loogeyBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward, ForceMode.Impulse);
-            //loogeyRb.AddRelativeForce(Vector3.forward * spitForce * Time.deltaTime, ForceMode.Impulse);
+        
+            GameObject loogey = Instantiate(loogeyPrefab, loogeySpawn.transform.position, loogeyPrefab.transform.rotation);
+            loogey.GetComponent<Rigidbody>().AddRelativeForce(new Vector3(0, spitForce, spitForce));
 
         }
 
