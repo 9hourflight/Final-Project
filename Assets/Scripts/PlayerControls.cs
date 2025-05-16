@@ -8,6 +8,7 @@ private CharacterController controller;
     [SerializeField] GameObject loogeyPrefab;
     [SerializeField] Transform loogeySpawn;
     [SerializeField] private Animator characterAnimator;
+    [SerializeField]
     private Rigidbody loogeyRb;
     [SerializeField] private float speed;
     [SerializeField]
@@ -24,14 +25,14 @@ private CharacterController controller;
         Cursor.lockState = CursorLockMode.Locked;
         loogeyRb = loogeyPrefab.GetComponent<Rigidbody>();
         characterAnimator = GetComponent<Animator>();
-        
+
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        float verticalInput = Input.GetAxis("Vertical");
-        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
         yaw += mouseX;
@@ -50,11 +51,14 @@ private CharacterController controller;
             controller.Move(moveDirection.normalized * speed * Time.deltaTime);
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetButtonDown("Fire1"))
         {
-            loogeyRb.AddForce(transform.forward, ForceMode.Impulse);
-            Instantiate(loogeyPrefab, loogeySpawn.transform.position, loogeyPrefab.transform.rotation);
             
+            Instantiate(loogeyPrefab, loogeySpawn.transform.position, loogeyPrefab.transform.rotation);
+            loogeyRb.AddForce(0, 0, 10, ForceMode.Impulse);
+            //loogeyBullet.GetComponent<Rigidbody>().AddRelativeForce(Vector3.forward, ForceMode.Impulse);
+            //loogeyRb.AddRelativeForce(Vector3.forward * spitForce * Time.deltaTime, ForceMode.Impulse);
+
         }
 
         characterAnimator.SetFloat("MoveX", inputDirection.x);
