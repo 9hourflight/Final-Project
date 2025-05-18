@@ -8,30 +8,60 @@ public class AiController : MonoBehaviour
     [SerializeField] NavMeshAgent agent;
     [SerializeField] int currentPathIndex = 0;
     [SerializeField] private Transform[] path;
+    private bool isDead;
+    [SerializeField] float despawnTime;
+    [SerializeField] public AudioClip birdSounds;
+    [SerializeField] AudioSource birdAudioSource;
+    [SerializeField] public float birdsShot;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         birdAnimator = GetComponent<Animator>();
+        //birdAudioSource = GetComponent<AudioSource>();
+        isDead = false;
+        despawnTime = 5;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(agent.remainingDistance < .00001f)
+        
+        if (!isDead)
         {
-            agent.SetDestination(path[currentPathIndex++].position);
-            birdAnimator.SetBool("isFlying", true);
-
-            if (currentPathIndex >= path.Length)
+            if (agent.remainingDistance < .00001f)
             {
-                currentPathIndex = 0;
+                agent.SetDestination(path[currentPathIndex++].position);
+                birdAnimator.SetBool("isFlying", true);
+
+                if (currentPathIndex >= path.Length)
+                {
+                    currentPathIndex = 0;
+                }
             }
+        }
+        else if (isDead)
+        {
+            agent.enabled = false;
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnCollisionEnter(Collision collision)
     {
-        birdAnimator.SetBool("die", true);
+        if (collision.gameObject.CompareTag("projectile"))
+        {
+            birdAnimator.SetBool("die", true);
+            isDead = true;
+            birdsShot++;
+            birdAudioSource.PlayOneShot(birdSounds, 1f);
+            //WaitForSecondsRealTime(despawnTime);
+
+        }
+            
+    }
+
+    private void WaitForSecondsRealTime(float seconds)
+    {
+        Destroy(this.gameObject);
     }
 
 }

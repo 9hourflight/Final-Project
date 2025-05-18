@@ -9,12 +9,10 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] Transform loogeySpawn;
     [SerializeField] private Animator characterAnimator;
     [SerializeField] private float speed;
-    [SerializeField]
-    private float spitForce = 1400;
-    [SerializeField]
-    private float yaw;
-    [SerializeField]
-    private float pitch;
+    [SerializeField] private float spitForce = 1400;
+    [SerializeField] private float yaw;
+    [SerializeField] private float pitch;
+    [SerializeField] public float playerTissues = 10;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,8 +25,8 @@ public class PlayerControls : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        float verticalInput = Input.GetAxisRaw("Vertical");
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxis("Horizontal");
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");
         yaw += mouseX;
@@ -43,19 +41,25 @@ public class PlayerControls : MonoBehaviour
         if(inputDirection.magnitude >= 0.1f)
         {
             Vector3 moveDirection = transform.right * inputDirection.x + transform.forward * inputDirection.z;
-            controller.Move(moveDirection.normalized * speed * Time.deltaTime);
+            controller.Move(speed * Time.deltaTime * moveDirection.normalized);
         }
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") )
         {
-          
-            GameObject loogey = Instantiate(loogeyPrefab, loogeySpawn.transform.position, loogeySpawn.transform.localRotation);
-            loogey.GetComponent<Rigidbody>().AddForce(loogeySpawn.forward * spitForce, ForceMode.Impulse); //is only going in one direction
-            
-
+           //if (playerTissues >= 1)
+           {
+                GameObject loogey = Instantiate(loogeyPrefab, loogeySpawn.transform.position, loogeySpawn.transform.localRotation);
+                loogey.GetComponent<Rigidbody>().AddForce(loogeySpawn.forward * spitForce, ForceMode.Impulse); //is only going in one direction
+           }
+          // else
+           {
+                //Debug.Log("Not enough snot!");
+           }
+   
         }
 
         characterAnimator.SetFloat("MoveX", inputDirection.x);
         characterAnimator.SetFloat("MoveY", inputDirection.z);
     }
+
 }

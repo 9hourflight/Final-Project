@@ -9,6 +9,8 @@ TagManager:
   - lb_perchTarget
   - enemy
   - projectile
+  - floor
+  - tissues
   layers:
   - Default
   - TransparentFX
