@@ -6,8 +6,21 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private GameObject spawner;
+    private int crows;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-   
+    private void Start()
+    {
+        crows = spawner.GetComponent<SpawnManager>().activeCrows;
+    }
+
+    public void GameOver()
+    {
+        if(crows >= 5)
+        {
+            SceneManager.LoadScene(SceneManager.GetSceneByBuildIndex(2).buildIndex);
+        }
+    }
 
     public void restartLevel()
     {

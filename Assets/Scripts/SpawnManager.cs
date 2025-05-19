@@ -5,8 +5,7 @@ using System.Collections.Generic;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private GameObject crow;
-    [SerializeField] private int activeCrows;
-    private float crowZPos = 0.5f;
+    [SerializeField] public int activeCrows;
     private float xUpper = 5f;
     private float xLower = -18f;
     private float zUpper = 20f;
@@ -33,5 +32,6 @@ public class SpawnManager : MonoBehaviour
     {
         Vector3 spawnPos = new Vector3(Random.Range(xLower, xUpper), 0, (Random.Range(zLower, zUpper)));
         Instantiate(crow, spawnPos, crow.transform.rotation);
+        activeCrows++;
     }
 }
