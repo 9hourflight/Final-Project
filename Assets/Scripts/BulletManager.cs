@@ -1,5 +1,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class BulletManager : MonoBehaviour
 {
@@ -9,11 +11,15 @@ public class BulletManager : MonoBehaviour
         if (collision.gameObject.CompareTag("enemy"))
         {
             Destroy(this.gameObject);
-            Debug.Log("zoo wee mama");
         }
-        else if (collision.gameObject.CompareTag("floor"))
+        else
         {
-            
+            StartCoroutine(DespawnBullet());
         }
+    }
+    IEnumerator DespawnBullet()
+    {
+        yield return new WaitForSeconds(3);
+        Destroy(this.gameObject);
     }
 }

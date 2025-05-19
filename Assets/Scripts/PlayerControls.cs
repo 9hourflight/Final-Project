@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerControls : MonoBehaviour
 {
@@ -12,7 +14,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float spitForce = 1400;
     [SerializeField] private float yaw;
     [SerializeField] private float pitch;
-    [SerializeField] public float playerTissues = 10;
+    [SerializeField] public AudioClip sneezeSound;
+    [SerializeField] private AudioSource audioSource;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -44,22 +47,15 @@ public class PlayerControls : MonoBehaviour
             controller.Move(speed * Time.deltaTime * moveDirection.normalized);
         }
 
-        if (Input.GetButtonDown("Fire1") )
+        if (Input.GetButtonUp("Fire1") )
         {
-           //if (playerTissues >= 1)
-           {
-                GameObject loogey = Instantiate(loogeyPrefab, loogeySpawn.transform.position, loogeySpawn.transform.localRotation);
-                loogey.GetComponent<Rigidbody>().AddForce(loogeySpawn.forward * spitForce, ForceMode.Impulse); //is only going in one direction
-           }
-          // else
-           {
-                //Debug.Log("Not enough snot!");
-           }
-   
+          
+            GameObject loogey = Instantiate(loogeyPrefab, loogeySpawn.transform.position, loogeySpawn.transform.localRotation);
+            audioSource.PlayOneShot(sneezeSound, 1f);
         }
 
         characterAnimator.SetFloat("MoveX", inputDirection.x);
         characterAnimator.SetFloat("MoveY", inputDirection.z);
     }
-
+   
 }

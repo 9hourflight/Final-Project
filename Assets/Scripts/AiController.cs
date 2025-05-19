@@ -1,6 +1,8 @@
 using System.IO;
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections;
+using System.Collections.Generic;
 
 public class AiController : MonoBehaviour
 {
@@ -11,7 +13,7 @@ public class AiController : MonoBehaviour
     private bool isDead;
     [SerializeField] float despawnTime;
     [SerializeField] public AudioClip birdSounds;
-    [SerializeField] AudioSource birdAudioSource;
+    [SerializeField] private AudioSource birdAudioSource;
     [SerializeField] public float birdsShot;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -53,15 +55,15 @@ public class AiController : MonoBehaviour
             isDead = true;
             birdsShot++;
             birdAudioSource.PlayOneShot(birdSounds, 1f);
+            StartCoroutine(DespawnBird());
             //WaitForSecondsRealTime(despawnTime);
 
         }
             
     }
-
-    private void WaitForSecondsRealTime(float seconds)
+    IEnumerator DespawnBird()
     {
+        yield return new WaitForSeconds(5);
         Destroy(this.gameObject);
     }
-
 }
